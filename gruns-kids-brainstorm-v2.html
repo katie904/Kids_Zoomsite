@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grüns Kids Offsite — Live Brainstorm Board</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  --gd: #0D2E1A;
+  --gm: #1B5E35;
+  --gb: #2E7D32;
+  --gb-light: #4CAF50;
+  --gold: #B8860B;
+  --gold-bg: #FFF8DC;
+  --red: #B71C1C;
+  --orange: #E65100;
+  --page-bg: #F4F6F4;
+  --panel-bg: #FFFFFF;
+  --form-bg: #F9FAF9;
+  --border: #D0D8D0;
+  --border-strong: #B0BCB0;
+  --ink: #1A2A1A;
+  --ink2: #3A4A3A;
+  --muted: #6A7A6A;
+  --faint: #E8EEE8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--page-bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.hdr {
+  background: var(--gd);
+  border-bottom: 3px solid #F5C842;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  gap: 12px;
+}
+.hdr-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: #F5C842;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.hdr-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #A8C8A8;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.hdr-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.live-row { display: flex; align-items: center; gap: 6px; }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #4CAF50;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
+.live-txt { font-size: 10px; font-weight: 800; color: #A8D8A8; letter-spacing: 1.5px; }
+.badge {
+  background: #F5C842;
+  color: #0D2E1A;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 4px 11px;
+  border-radius: 2px;
+  letter-spacing: .3px;
+  white-space: nowrap;
+}
+.sync-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sync-ok { background: #C8E6C9; color: #1B5E20; border: 1px solid #81C784; }
+.sync-load { background: #FFF9C4; color: #827717; border: 1px solid #F9A825; }
+.sync-err { background: #FFCDD2; color: #B71C1C; border: 1px solid #E57373; }
+
+/* OKR TABS */
+.tabs {
+  display: flex;
+  background: var(--gm);
+  border-bottom: 1px solid #145228;
+  padding: 0 20px;
+  overflow-x: auto;
+}
+.tab {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: #A8D8B8;
+  border-bottom: 3px solid transparent;
+  transition: all .12s;
+  white-space: nowrap;
+}
+.tab-sub { font-size: 8px; font-weight: 600; letter-spacing: 1px; display: block; margin-top: 1px; color: #7AB89A; }
+.tab.active[data-okr="1"] { color: #FFFFFF; border-bottom-color: #4CAF50; }
+.tab.active[data-okr="1"] .tab-sub { color: #A8D8A8; }
+.tab.active[data-okr="2"] { color: #F5C842; border-bottom-color: #F5C842; }
+.tab.active[data-okr="2"] .tab-sub { color: #E0C060; }
+.tab.active[data-okr="all"] { color: #ffffff; border-bottom-color: rgba(255,255,255,.5); }
+.tab:hover:not(.active) { color: #FFFFFF; }
+
+/* LAYOUT */
+.main { display: grid; grid-template-columns: 320px 1fr; min-height: calc(100vh - 86px); }
+
+/* FORM */
+.form-panel {
+  background: var(--form-bg);
+  border-right: 1px solid var(--border);
+  padding: 18px 16px;
+  overflow-y: auto;
+  position: sticky;
+  top: 86px;
+  max-height: calc(100vh - 86px);
+}
+
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: var(--gm);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* mini stats */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 14px; }
+.stat-box {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  padding: 8px 10px; border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.stat-val { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 900; line-height: 1; }
+.stat-lbl { font-size: 9px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.v-okr1 { color: var(--gm); }
+.v-okr2 { color: #9A7000; }
+.v-swing { color: #9A7000; }
+.v-opt { color: var(--gm); }
+
+.divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+
+/* form fields */
+.fg { margin-bottom: 11px; }
+.fl {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+.fi, .fta, .fsel {
+  width: 100%;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  padding: 7px 9px;
+  border-radius: 3px;
+  outline: none;
+  transition: border-color .12s;
+}
+.fi:focus, .fta:focus, .fsel:focus { border-color: var(--gm); box-shadow: 0 0 0 2px rgba(27,94,53,.1); }
+.fta { resize: vertical; min-height: 60px; line-height: 1.5; }
+.fsel option { background: #fff; }
+
+/* type toggle */
+.type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.tbtn {
+  padding: 8px 5px;
+  border: 2px solid var(--border-strong);
+  background: var(--panel-bg);
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .5px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all .12s;
+  text-align: center;
+  text-transform: uppercase;
+}
+.tbtn.swing-on { border-color: #9A7000; background: #FFF8DC; color: #7A5500; }
+.tbtn.opt-on { border-color: var(--gm); background: #E8F5E9; color: var(--gm); }
+
+/* level btns */
+.lvl-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+.lbtn {
+  padding: 6px 3px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--panel-bg);
+  color: var(--muted);
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all .12s;
+  text-align: center;
+}
+.lbtn.H-on { border-color: #C62828; background: #FFEBEE; color: #B71C1C; }
+.lbtn.M-on { border-color: #E65100; background: #FFF3E0; color: #BF360C; }
+.lbtn.L-on { border-color: #607D8B; background: #ECEFF1; color: #37474F; }
+
+/* custom function */
+.custom-fn-wrap { margin-top: 5px; display: none; }
+.custom-fn-wrap.show { display: block; }
+
+/* submit */
+.submit {
+  width: 100%;
+  background: var(--gm);
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  padding: 11px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-top: 6px;
+  transition: all .15s;
+}
+.submit:hover { background: #145228; transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,.15); }
+.submit:active { transform: translateY(0); box-shadow: none; }
+.submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.context-box {
+  background: #E8F5E9;
+  border: 1px solid #A5D6A7;
+  border-radius: 3px;
+  padding: 9px 11px;
+  font-size: 10.5px;
+  color: #2E4A2E;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+.context-box strong { color: var(--gm); font-weight: 800; }
+
+.action-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  padding: 7px;
+  cursor: pointer;
+  border-radius: 3px;
+  margin-top: 7px;
+  transition: all .12s;
+  letter-spacing: .3px;
+}
+.action-btn:hover { border-color: var(--border-strong); color: var(--ink2); background: var(--faint); }
+.action-btn.danger { color: #C62828; border-color: #FFCDD2; }
+.action-btn.danger:hover { background: #FFEBEE; border-color: #EF9A9A; }
+
+/* BOARD */
+.board {
+  background: var(--page-bg);
+  overflow-y: auto;
+  padding: 16px 18px;
+}
+
+/* filter bar */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filter-lbl { font-size: 9px; font-weight: 800; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+.fchip {
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-bg);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .1s;
+  white-space: nowrap;
+}
+.fchip.fa { background: var(--gm); color: #fff; border-color: var(--gm); }
+.fchip.fg-active { background: #E8F5E9; color: var(--gm); border-color: #81C784; }
+.fchip.fy-active { background: #FFF8DC; color: #7A5500; border-color: #F9A825; }
+.fchip:hover:not(.fa):not(.fg-active):not(.fy-active) { background: var(--faint); }
+
+.view-row { margin-left: auto; display: flex; gap: 4px; }
+.vbtn {
+  padding: 4px 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--panel-bg);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all .1s;
+}
+.vbtn.va { background: var(--gm); color: #fff; border-color: var(--gm); }
+
+/* cards view */
+.cols-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+
+/* card */
+.card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin-bottom: 7px;
+  position: relative;
+  animation: cin .2s ease-out;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+@keyframes cin { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+.card.swing { border-left: 4px solid #C8960C; }
+.card.funnel { border-left: 4px solid var(--gb); }
+@keyframes flash { 0%{background:#E8F5E9} 100%{background:#fff} }
+.card.new-flash { animation: flash .8s ease-out; }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 7px; margin-bottom: 4px; }
+.card-title { font-size: 12px; font-weight: 700; color: var(--ink); line-height: 1.3; flex: 1; }
+.type-pill {
+  font-size: 8px; font-weight: 800; letter-spacing: .5px;
+  padding: 2px 7px; border-radius: 2px; flex-shrink: 0; text-transform: uppercase;
+}
+.pill-swing { background: #FFF8DC; color: #7A5500; border: 1px solid #F9A825; }
+.pill-funnel { background: #E8F5E9; color: #1B5E20; border: 1px solid #81C784; }
+.card-desc { font-size: 10.5px; color: var(--ink2); line-height: 1.5; margin-bottom: 7px; }
+.card-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.mpill {
+  font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 2px;
+  letter-spacing: .3px; text-transform: uppercase; white-space: nowrap;
+}
+.m-fn { background: var(--faint); color: var(--ink2); border: 1px solid var(--border); }
+.m-own { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
+.m-time { background: var(--faint); color: var(--muted); border: 1px solid var(--border); }
+.m-ts { background: transparent; color: #AAAAAA; border: none; margin-left: auto; font-size: 8px; }
+.ie-wrap { display: flex; align-items: center; gap: 3px; }
+.ied {
+  width: 19px; height: 19px; border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 800;
+}
+.iH { background: #FFCDD2; color: #B71C1C; }
+.iM { background: #FFE0B2; color: #BF360C; }
+.iL { background: #ECEFF1; color: #546E7A; }
+.eH { background: #FFCDD2; color: #B71C1C; border: 1px solid #EF9A9A; }
+.eM { background: #FFE0B2; color: #BF360C; border: 1px solid #FFCC80; }
+.eL { background: #ECEFF1; color: #546E7A; border: 1px solid #CFD8DC; }
+.ie-sep { font-size: 8px; color: var(--border-strong); }
+.ie-lbl { font-size: 7px; color: var(--muted); font-weight: 800; }
+
+.del-btn {
+  position: absolute; top: 5px; right: 7px;
+  background: transparent; border: none;
+  color: #DDD; font-size: 13px; cursor: pointer;
+  line-height: 1; padding: 2px 4px; border-radius: 2px;
+  transition: all .1s; display: none;
+}
+.card:hover .del-btn { display: block; color: #AAA; }
+.del-btn:hover { color: var(--red) !important; background: #FFEBEE; }
+
+/* col header */
+.col-hdr {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 9px; margin-bottom: 7px; border-radius: 2px;
+}
+
+/* list view */
+.list-wrap { overflow-x: auto; }
+.list-tbl { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
+.list-tbl th {
+  background: var(--gm); color: #fff; font-size: 9px; font-weight: 800;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 7px 9px; text-align: left;
+  border-bottom: 2px solid #145228; position: sticky; top: 0;
+}
+.list-tbl td { padding: 7px 9px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--ink2); background: var(--panel-bg); }
+.list-tbl tr:nth-child(even) td { background: #F4F8F4; }
+.list-tbl tr:hover td { background: #E8F5E9; }
+
+/* matrix view */
+.matrix-wrap {
+  display: grid; grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto; gap: 10px;
+}
+.mq {
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 10px 12px; min-height: 180px;
+  background: var(--panel-bg);
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+.mq-lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 8px;
+  padding-bottom: 5px; border-bottom: 1px solid var(--border);
+}
+.mq-do { background: #F1F8F1; border-color: #A5D6A7; }
+.mq-do .mq-lbl { color: #1B5E20; }
+.mq-bets { background: #FFFDE7; border-color: #F9A825; }
+.mq-bets .mq-lbl { color: #7A5500; }
+.mq-fill { background: #FAFAFA; border-color: var(--border); }
+.mq-fill .mq-lbl { color: #546E7A; }
+.mq-dep { background: #FFF8F8; border-color: #FFCDD2; }
+.mq-dep .mq-lbl { color: #C62828; }
+
+.mcard {
+  background: #fff; padding: 5px 8px; margin-bottom: 5px;
+  border-radius: 2px; font-size: 10px; color: var(--ink2);
+  border: 1px solid var(--border);
+}
+.mcard.swing { border-left: 3px solid #C8960C; }
+.mcard.funnel { border-left: 3px solid var(--gb); }
+.mcard-title { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.mcard-sub { font-size: 9px; color: var(--muted); }
+
+/* empty */
+.empty { text-align: center; padding: 48px 20px; color: var(--muted); }
+.empty-ico { font-size: 26px; margin-bottom: 8px; opacity: .3; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 22px; right: 22px;
+  background: var(--gm); color: #fff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px; font-weight: 700;
+  padding: 9px 16px; border-radius: 3px;
+  z-index: 999; border-left: 3px solid #F5C842;
+  transform: translateY(50px); opacity: 0;
+  transition: all .22s;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* new idea flash in board */
+.new-alert {
+  display: none;
+  background: #E8F5E9;
+  border: 1px solid #81C784;
+  color: #1B5E20;
+  font-size: 10px; font-weight: 700;
+  padding: 7px 12px; border-radius: 3px;
+  margin-bottom: 10px; letter-spacing: .3px;
+}
+.new-alert.show { display: block; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--page-bg); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+@media(max-width:860px) {
+  .main { grid-template-columns: 1fr; }
+  .form-panel { position: static; max-height: none; }
+  .matrix-wrap { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div>
+    <div class="hdr-logo">GRÜNS KIDS</div>
+    <div class="hdr-title">Live Brainstorm — Offsite 2026</div>
+  </div>
+  <div class="hdr-right">
+    <div class="live-row">
+      <div class="dot"></div>
+      <div class="live-txt">LIVE</div>
+    </div>
+    <div class="sync-badge sync-load" id="syncBadge">CONNECTING…</div>
+    <div class="badge" id="globalBadge">0 ideas</div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-okr="1" onclick="switchOKR(1)">
+    OKR 1 — First Orders &amp; nCAC
+    <span class="tab-sub">Acquisition · CVR · Creative</span>
+  </button>
+  <button class="tab" data-okr="2" onclick="switchOKR(2)">
+    OKR 2 — Retention &amp; LTV
+    <span class="tab-sub">Lifecycle · Product · Win-Back</span>
+  </button>
+  <button class="tab" data-okr="all" onclick="switchOKR('all')" style="margin-left:auto;">
+    All Ideas
+    <span class="tab-sub">Full Board</span>
+  </button>
+</div>
+
+<div class="main">
+
+  <!-- FORM PANEL -->
+  <aside class="form-panel">
+    <div class="section-title">＋ Add an Idea</div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-val v-okr1" id="s1">0</div><div class="stat-lbl">OKR 1</div></div>
+      <div class="stat-box"><div class="stat-val v-okr2" id="s2">0</div><div class="stat-lbl">OKR 2</div></div>
+      <div class="stat-box"><div class="stat-val v-swing" id="ss">0</div><div class="stat-lbl">Big Swings</div></div>
+      <div class="stat-box"><div class="stat-val v-opt" id="so">0</div><div class="stat-lbl">Optimizations</div></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="fg">
+      <label class="fl">Initiative Title *</label>
+      <input class="fi" id="f-title" type="text" placeholder="e.g. Hiya Comparison Page" maxlength="80">
+    </div>
+
+    <div class="fg">
+      <label class="fl">Description / Hypothesis</label>
+      <textarea class="fta" id="f-desc" placeholder="What's the idea? What problem does it solve?"></textarea>
+    </div>
+
+    <div class="fg">
+      <label class="fl">OKR</label>
+      <select class="fsel" id="f-okr">
+        <option value="1">OKR 1 — First Orders &amp; nCAC</option>
+        <option value="2">OKR 2 — Retention &amp; LTV</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Type</label>
+      <div class="type-row">
+        <button class="tbtn swing-on" id="btn-sw" onclick="setType('swing')">🚀 Big Swing</button>
+        <button class="tbtn" id="btn-fn" onclick="setType('funnel')">🔧 Funnel Optimization</button>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Function</label>
+      <select class="fsel" id="f-func" onchange="onFuncChange(this)">
+        <option value="">— Select function —</option>
+        <option value="Growth Creative">Growth Creative</option>
+        <option value="Lifecycle / Email">Lifecycle / Email</option>
+        <option value="Organic Social">Organic Social</option>
+        <option value="Influencer">Influencer</option>
+        <option value="Web / CRO">Web / CRO</option>
+        <option value="Product">Product</option>
+        <option value="Partnerships">Partnerships</option>
+        <option value="Sampling">Sampling</option>
+        <option value="Amazon">Amazon</option>
+        <option value="Retail">Retail</option>
+        <option value="Finance / Pricing">Finance / Pricing</option>
+        <option value="Operations">Operations</option>
+        <option value="Data / Analytics">Data / Analytics</option>
+        <option value="CX">CX</option>
+        <option value="__custom__">＋ Add custom function…</option>
+      </select>
+      <div class="custom-fn-wrap" id="custom-fn-wrap">
+        <input class="fi" id="f-custom-fn" type="text" placeholder="Type your function name…" maxlength="40" style="margin-top:5px;">
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Owner</label>
+      <input class="fi" id="f-owner" type="text" placeholder="e.g. Anthony, Courtney…" maxlength="40">
+    </div>
+
+    <div class="fg">
+      <label class="fl">Timeline</label>
+      <select class="fsel" id="f-time">
+        <option value="">— Select timeline —</option>
+        <option value="Now (30 days)">Now (30 days)</option>
+        <option value="Soon (60-90 days)">Soon (60-90 days)</option>
+        <option value="Q2 2026">Q2 2026</option>
+        <option value="Q3 2026">Q3 2026</option>
+        <option value="Q4 2026">Q4 2026</option>
+        <option value="H1 2026">H1 2026</option>
+        <option value="H2 2026">H2 2026</option>
+        <option value="2026 Full Year">2026 Full Year</option>
+      </select>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Impact</label>
+      <div class="lvl-row">
+        <button class="lbtn H-on" id="imp-H" onclick="setImp('H')">High</button>
+        <button class="lbtn" id="imp-M" onclick="setImp('M')">Medium</button>
+        <button class="lbtn" id="imp-L" onclick="setImp('L')">Low</button>
+      </div>
+    </div>
+
+    <div class="fg">
+      <label class="fl">Effort</label>
+      <div class="lvl-row">
+        <button class="lbtn" id="eff-H" onclick="setEff('H')">High</button>
+        <button class="lbtn M-on" id="eff-M" onclick="setEff('M')">Medium</button>
+        <button class="lbtn" id="eff-L" onclick="setEff('L')">Low</button>
+      </div>
+    </div>
+
+    <button class="submit" id="submit-btn" onclick="addIdea()">Add to Board →</button>
+
+    <div class="context-box" id="ctx-box">
+      <strong>OKR 1 Focus:</strong> Drive first orders and reduce nCAC. Think creative testing, CVR fixes, sampling, referral, influencer, IP/LTOs, performance partners.
+    </div>
+
+    <hr class="divider">
+
+    <button class="action-btn" onclick="exportCSV()">⬇ Export ideas as CSV</button>
+    <button class="action-btn danger" onclick="clearAll()">✕ Clear all ideas (host only)</button>
+  </aside>
+
+  <!-- BOARD -->
+  <main class="board">
+    <div class="filter-bar">
+      <span class="filter-lbl">Filter:</span>
+      <button class="fchip fa" onclick="setFilter('all',this)">All</button>
+      <button class="fchip" onclick="setFilter('swing',this)">🚀 Big Swings</button>
+      <button class="fchip" onclick="setFilter('funnel',this)">🔧 Optimizations</button>
+      <span style="color:#222;font-size:10px;">|</span>
+      <button class="fchip" onclick="setFilter('H-impact',this)">High Impact</button>
+      <button class="fchip" onclick="setFilter('L-effort',this)">Low Effort</button>
+      <div class="view-row">
+        <button class="vbtn va" onclick="setView('cols',this)">Cards</button>
+        <button class="vbtn" onclick="setView('list',this)">List</button>
+        <button class="vbtn" onclick="setView('matrix',this)">Matrix</button>
+      </div>
+    </div>
+
+    <div class="new-alert" id="new-alert">↑ New idea added by a teammate — board updated</div>
+    <div id="board-out"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const BIN_ID  = '69b85685aa77b81da9ee0106';
+const API_KEY = '$2a$10$S2zZADSfyJwcCcBqhbFtpOh8WVqFONV29.hV8Pfm22sT29pJKrYm6';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+const HEADERS  = { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY, 'X-Bin-Versioning': 'false' };
+
+let ideas  = [];
+let curOKR = 1;
+let curFilter = 'all';
+let curView   = 'cols';
+let selType   = 'swing';
+let selImp    = 'H';
+let selEff    = 'M';
+let synced    = false;
+let lastHash  = '';
+
+// ── STORAGE (JSONBin) ──
+async function loadIdeas() {
+  const r = await fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': API_KEY } });
+  if (!r.ok) throw new Error('load failed');
+  const j = await r.json();
+  ideas = j.record.ideas || [];
+}
+
+async function saveIdeas() {
+  const r = await fetch(BIN_URL, {
+    method: 'PUT',
+    headers: HEADERS,
+    body: JSON.stringify({ ideas })
+  });
+  if (!r.ok) throw new Error('save failed');
+}
+
+// ── POLL for real-time sync (every 4s) ──
+async function poll() {
+  try {
+    const r = await fetch(BIN_URL + '/latest', { headers: { 'X-Master-Key': API_KEY } });
+    if (!r.ok) throw new Error();
+    const j = await r.json();
+    const remote = j.record.ideas || [];
+    const hash = remote.length + '|' + (remote[0]?.id || '');
+    setSyncStatus('ok');
+    if (hash !== lastHash) {
+      const wasMore = remote.length > ideas.length;
+      ideas = remote;
+      lastHash = hash;
+      updateStats();
+      render();
+      if (wasMore && synced) {
+        const al = document.getElementById('new-alert');
+        al.classList.add('show');
+        setTimeout(() => al.classList.remove('show'), 3500);
+      }
+    }
+    synced = true;
+  } catch(e) {
+    setSyncStatus('err');
+  }
+}
+
+function setSyncStatus(s) {
+  const el = document.getElementById('syncBadge');
+  el.className = 'sync-badge';
+  if (s==='ok')   { el.classList.add('sync-ok');   el.textContent = 'LIVE SYNC'; }
+  else if(s==='err') { el.classList.add('sync-err'); el.textContent = 'SYNC ERROR'; }
+  else            { el.classList.add('sync-load'); el.textContent = 'CONNECTING…'; }
+}
+
+// ── INIT ──
+(async () => {
+  try {
+    await loadIdeas();
+    lastHash = ideas.length + '|' + (ideas[0]?.id || '');
+    synced = true;
+    setSyncStatus('ok');
+  } catch(e) {
+    setSyncStatus('err');
+  }
+  updateStats();
+  render();
+  setInterval(poll, 4000);
+})();
+
+// ── OKR SWITCH ──
+function switchOKR(okr) {
+  curOKR = okr;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll(`.tab[data-okr="${okr}"]`).forEach(t => t.classList.add('active'));
+  if(okr !== 'all') document.getElementById('f-okr').value = String(okr);
+  const ctx = {
+    1: '<strong>OKR 1 Focus:</strong> Drive first orders and reduce nCAC. Think creative testing, CVR fixes, sampling, referral, influencer, IP/LTOs, performance partners.',
+    2: '<strong>OKR 2 Focus:</strong> Improve retention and LTV. Think taste onboarding, lifecycle flows, save flows, NPS routing, win-back, quarterly upsell, formula.',
+    all: '<strong>All ideas across both OKRs.</strong> Use filters to explore by type, function, or priority.'
+  };
+  document.getElementById('ctx-box').innerHTML = ctx[okr];
+  render();
+}
+
+// ── FORM SETTERS ──
+function setType(t) {
+  selType = t;
+  document.getElementById('btn-sw').className = 'tbtn' + (t==='swing' ? ' swing-on' : '');
+  document.getElementById('btn-fn').className = 'tbtn' + (t==='funnel' ? ' opt-on' : '');
+}
+function setImp(v) {
+  selImp = v;
+  ['H','M','L'].forEach(x => {
+    document.getElementById('imp-'+x).className = 'lbtn' + (x===v ? ' '+x+'-on' : '');
+  });
+}
+function setEff(v) {
+  selEff = v;
+  ['H','M','L'].forEach(x => {
+    document.getElementById('eff-'+x).className = 'lbtn' + (x===v ? ' '+x+'-on' : '');
+  });
+}
+function onFuncChange(sel) {
+  const wrap = document.getElementById('custom-fn-wrap');
+  if(sel.value === '__custom__') {
+    wrap.classList.add('show');
+    document.getElementById('f-custom-fn').focus();
+  } else {
+    wrap.classList.remove('show');
+  }
+}
+
+// ── ADD IDEA ──
+async function addIdea() {
+  const title = document.getElementById('f-title').value.trim();
+  if(!title) { showToast('Please enter a title', 'red'); return; }
+
+  // resolve function
+  let func = document.getElementById('f-func').value;
+  if(func === '__custom__') {
+    func = document.getElementById('f-custom-fn').value.trim();
+    if(!func) { showToast('Please type a custom function name', 'red'); return; }
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  const idea = {
+    id: Date.now() + Math.random(),
+    title,
+    desc: document.getElementById('f-desc').value.trim(),
+    okr: document.getElementById('f-okr').value,
+    type: selType,
+    func,
+    owner: document.getElementById('f-owner').value.trim(),
+    timeline: document.getElementById('f-time').value,
+    impact: selImp,
+    effort: selEff,
+    ts: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})
+  };
+
+  // reload remote first to avoid overwriting concurrent additions
+  await loadIdeas();
+  ideas.unshift(idea);
+  await saveIdeas();
+
+  btn.disabled = false;
+  btn.textContent = 'Add to Board →';
+
+  // reset
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('f-func').value = '';
+  document.getElementById('custom-fn-wrap').classList.remove('show');
+
+  updateStats();
+  render();
+  showToast('Idea added — syncing to all viewers');
+  if(idea.okr !== 'all') switchOKR(parseInt(idea.okr));
+}
+
+// ── DELETE ──
+async function deleteIdea(id) {
+  await loadIdeas();
+  ideas = ideas.filter(i => i.id !== id);
+  await saveIdeas();
+  updateStats();
+  render();
+}
+
+// ── FILTER / VIEW ──
+function setFilter(f, el) {
+  curFilter = f;
+  document.querySelectorAll('.fchip').forEach(c => c.className = 'fchip');
+  if(f==='swing') el.classList.add('fy-active');
+  else if(f==='funnel') el.classList.add('fg-active');
+  else el.classList.add('fa');
+  render();
+}
+function setView(v, el) {
+  curView = v;
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.remove('va'));
+  el.classList.add('va');
+  render();
+}
+
+function filtered() {
+  let out = ideas.slice();
+  if(curOKR !== 'all') out = out.filter(i => i.okr === String(curOKR));
+  if(curFilter==='swing') out = out.filter(i => i.type==='swing');
+  if(curFilter==='funnel') out = out.filter(i => i.type==='funnel');
+  if(curFilter==='H-impact') out = out.filter(i => i.impact==='H');
+  if(curFilter==='L-effort') out = out.filter(i => i.effort==='L');
+  return out;
+}
+
+// ── RENDER ──
+function render() {
+  const data = filtered();
+  const el = document.getElementById('board-out');
+  if(curView==='list') renderList(data, el);
+  else if(curView==='matrix') renderMatrix(data, el);
+  else renderCols(data, el);
+}
+
+function cardHTML(idea) {
+  const swing = idea.type === 'swing';
+  return `<div class="card ${idea.type}">
+    <button class="del-btn" onclick="deleteIdea(${idea.id})" title="Remove">✕</button>
+    <div class="card-top">
+      <div class="card-title">${esc(idea.title)}</div>
+      <div class="type-pill ${swing?'pill-swing':'pill-funnel'}">${swing?'🚀 Swing':'🔧 Opt'}</div>
+    </div>
+    ${idea.desc?`<div class="card-desc">${esc(idea.desc)}</div>`:''}
+    <div class="card-meta">
+      ${idea.func?`<span class="mpill m-fn">${esc(idea.func)}</span>`:''}
+      ${idea.owner?`<span class="mpill m-own">👤 ${esc(idea.owner)}</span>`:''}
+      ${idea.timeline?`<span class="mpill m-time">${esc(idea.timeline)}</span>`:''}
+      <div class="ie-wrap" style="margin-left:auto;">
+        <span class="ie-lbl">IMP</span>
+        <div class="ied i${idea.impact}">${idea.impact||'?'}</div>
+        <span class="ie-sep">/</span>
+        <span class="ie-lbl">EFF</span>
+        <div class="ied e${idea.effort}">${idea.effort||'?'}</div>
+      </div>
+      <span class="mpill m-ts">${idea.ts||''}</span>
+    </div>
+  </div>`;
+}
+
+function renderCols(data, el) {
+  if(!data.length) { el.innerHTML = empty(); return; }
+  const funcs = [...new Set(data.map(i => i.func||'Uncategorized'))];
+  const clr = fn => {
+    const m = {
+      'Growth Creative':    ['#E8F5E9','#1B5E20'],
+      'Lifecycle / Email':  ['#FFFDE7','#7A5500'],
+      'Organic Social':     ['#E3F2FD','#0D47A1'],
+      'Web / CRO':          ['#F3E5F5','#4A148C'],
+      'Product':            ['#FFF3E0','#BF360C'],
+      'Partnerships':       ['#E0F7FA','#006064'],
+      'Influencer':         ['#FCE4EC','#880E4F'],
+      'Sampling':           ['#F1F8E9','#33691E'],
+      'Amazon':             ['#FFF8E1','#E65100'],
+      'Retail':             ['#EFEBE9','#3E2723'],
+      'Finance / Pricing':  ['#ECEFF1','#263238'],
+      'Data / Analytics':   ['#E0F2F1','#004D40'],
+      'CX':                 ['#FBE9E7','#BF360C'],
+    };
+    return m[fn]||['#F5F5F5','#424242'];
+  };
+  let html = '<div class="cols-view">';
+  funcs.forEach(f => {
+    const grp = data.filter(i=>(i.func||'Uncategorized')===f);
+    const [bg, txt] = clr(f);
+    html += `<div>
+      <div class="col-hdr" style="background:${bg};color:${txt};">${esc(f)} <span style="opacity:.5">(${grp.length})</span></div>
+      ${grp.map(cardHTML).join('')}
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function renderList(data, el) {
+  if(!data.length) { el.innerHTML = empty(); return; }
+  const rows = data.map(i => `<tr>
+    <td style="font-weight:700;color:#1A2A1A;max-width:200px;white-space:normal;">${esc(i.title)}</td>
+    <td>${i.type==='swing'?`<span style="color:#7A5500;font-size:10px;font-weight:700;">🚀 Swing</span>`:`<span style="color:#1B5E20;font-size:10px;font-weight:700;">🔧 Opt</span>`}</td>
+    <td><span class="mpill m-fn">${esc(i.func||'—')}</span></td>
+    <td style="color:#1B5E20;font-weight:600;">${esc(i.owner||'—')}</td>
+    <td style="color:#546E7A;">${esc(i.timeline||'—')}</td>
+    <td>${impBadge(i.impact)}</td>
+    <td>${impBadge(i.effort)}</td>
+    <td style="color:#6A7A6A;font-size:10px;max-width:220px;white-space:normal;">${esc(i.desc||'')}</td>
+    <td><button onclick="deleteIdea(${i.id})" style="background:transparent;border:none;color:#CCC;cursor:pointer;font-size:12px;padding:2px 5px;" onmouseover="this.style.color='#B71C1C'" onmouseout="this.style.color='#CCC'">✕</button></td>
+  </tr>`).join('');
+  el.innerHTML = `<div class="list-wrap"><table class="list-tbl">
+    <thead><tr>
+      <th>Initiative</th><th>Type</th><th>Function</th><th>Owner</th><th>Timeline</th><th>Impact</th><th>Effort</th><th>Notes</th><th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function renderMatrix(data, el) {
+  const doFirst = data.filter(i=>i.impact==='H'&&i.effort==='L');
+  const bigBets = data.filter(i=>i.impact==='H'&&(i.effort==='H'||i.effort==='M'));
+  const fillIns = data.filter(i=>i.impact==='M'||(i.impact==='L'&&i.effort!=='H'));
+  const deprio  = data.filter(i=>i.impact==='L'&&i.effort==='H');
+  const mc = i => `<div class="mcard ${i.type}">
+    <div class="mcard-title">${esc(i.title)}</div>
+    <div class="mcard-sub">${[i.owner?'👤 '+i.owner:null,i.func].filter(Boolean).join(' · ')}</div>
+  </div>`;
+  const quad = (cls, label, count, items) => `<div class="mq ${cls}">
+    <div class="mq-lbl">${label} <span style="opacity:.5">(${count})</span></div>
+    ${items.length ? items.map(mc).join('') : '<div style="color:#BBBBBB;font-size:10px;">—</div>'}
+  </div>`;
+  el.innerHTML = `<div style="font-size:9px;color:#AAAAAA;font-weight:700;letter-spacing:1px;margin-bottom:8px;display:flex;justify-content:space-between;">
+    <span>← HIGH EFFORT</span><span>LOW EFFORT →</span>
+  </div>
+  <div class="matrix-wrap">
+    ${quad('mq-do','⚡ Do First — High impact, Low effort',doFirst.length,doFirst)}
+    ${quad('mq-bets','🚀 Big Bets — High impact, High effort',bigBets.length,bigBets)}
+    ${quad('mq-fill','✅ Fill-ins — Medium impact',fillIns.length,fillIns)}
+    ${quad('mq-dep','⬇ Deprioritize — Low impact, High effort',deprio.length,deprio)}
+  </div>`;
+}
+
+function empty() {
+  return `<div class="empty"><div class="empty-ico">💡</div><div style="font-size:12px;color:#333;font-weight:600;">No ideas yet — add the first one!</div></div>`;
+}
+
+// ── STATS ──
+function updateStats() {
+  document.getElementById('s1').textContent = ideas.filter(i=>i.okr==='1').length;
+  document.getElementById('s2').textContent = ideas.filter(i=>i.okr==='2').length;
+  document.getElementById('ss').textContent = ideas.filter(i=>i.type==='swing').length;
+  document.getElementById('so').textContent = ideas.filter(i=>i.type==='funnel').length;
+  document.getElementById('globalBadge').textContent = ideas.length + ' idea' + (ideas.length===1?'':'s');
+}
+
+// ── EXPORT ──
+function exportCSV() {
+  if(!ideas.length) { showToast('No ideas to export', 'red'); return; }
+  const rows = [['Title','OKR','Type','Function','Owner','Timeline','Impact','Effort','Notes']];
+  ideas.forEach(i => rows.push([
+    `"${(i.title||'').replace(/"/g,'""')}"`,
+    i.okr==='1'?'OKR 1':'OKR 2',
+    i.type==='swing'?'Big Swing':'Funnel Optimization',
+    `"${(i.func||'').replace(/"/g,'""')}"`,
+    `"${(i.owner||'').replace(/"/g,'""')}"`,
+    i.timeline||'',i.impact||'',i.effort||'',
+    `"${(i.desc||'').replace(/"/g,'""')}"`
+  ]));
+  const blob = new Blob([rows.map(r=>r.join(',')).join('\n')], {type:'text/csv'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'gruns-kids-brainstorm.csv'; a.click();
+  showToast('Exported!');
+}
+
+// ── CLEAR ──
+async function clearAll() {
+  if(confirm('Clear ALL shared ideas? This cannot be undone.')) {
+    ideas = [];
+    await saveIdeas();
+    updateStats(); render();
+    showToast('Board cleared');
+  }
+}
+
+// ── HELPERS ──
+function esc(s) {
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function impBadge(v) {
+  const c={H:'#B71C1C',M:'#BF360C',L:'#546E7A'}[v]||'#546E7A';
+  return `<span style="font-size:10px;font-weight:800;color:${c};">${v||'?'}</span>`;
+}
+
+// ── TOAST ──
+function showToast(msg, type='green') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = type==='red' ? 'var(--red)' : 'var(--gm)';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2400);
+}
+</script>
+</body>
+</html>
